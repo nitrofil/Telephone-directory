@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Répertoire Téléphonique</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c2c2c2; /* Couleur de fond douce */
+            color: #333; /* Couleur de texte sombre */
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #4A90E2; /* Couleur du titre */
+        }
+        .form-container {
+            background: white;
+            border-radius: 8px; /* Coins arrondis */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 300px; /* Largeur maximale cadre blanc ajouter */
+        }
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container button {
+            width: calc(100% - 20px); /* Ajustement de la largeur */
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px; /* Coins arrondis */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Ombre légère */
+        }
+        .form-container button {
+		    width: 100%; /* Occupation du bouton 100% de la largeur du conteneur */
+            background-color: #4e8a2b; /* #4A90E2 Couleur de fond des boutons */
+            color: white; /* Couleur du texte des boutons */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Effet de transition */
+        }
+        .form-container button:hover {
+            background-color: #6dad47; /* #357ABD Couleur au survol */
+        }
+        .contacts-container {
+            background: white;
+            border-radius: 8px; /* Coins arrondis */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 1200px; /* Largeur maximale cadre blanc contacts enregistés */
+        }
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+			max-width: 1200px; /* Largeur maximale cellules contacts enregistés */
+        }
+
+.contacts-table th {
+    background-color: #4A90E2; /* Couleur d'arrière-plan des en-têtes */
+    color: white; /* Couleur du texte d'en-tête */
+    font-size: 15px; /* Taille de la police pour les en-têtes */
+    font-weight: bold; /* Texte en gras */
+	border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+    width: 150px;
+		white-space: nowrap; /* Empêche le retour à la ligne */
+		overflow: hidden; /* Cache le débordement */
+		text-overflow: ellipsis; /* Ajoute des points de suspension pour le texte tronqué */
+}
+
+.contacts-table td {
+    font-size: 14px; /* Taille de la police des cellules de contacts */
+    color: #2c3e50; /* Couleur de la police des cellules */
+    padding: 10px; /* Ajuste l'espacement interne des cellules */
+    text-align: center; /* Aligne le texte au centre des cellules */
+	border: 1px solid #ddd;
+	padding: 5px;
+    text-align: center;
+    width: 150px;
+		white-space: nowrap; /* Empêche le retour à la ligne */
+		overflow: hidden; /* Cache le débordement */
+		text-overflow: ellipsis; /* Ajoute des points de suspension pour le texte tronqué */
+}
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #e74c3c; /* Rouge pour le bouton de suppression */
+            font-size: 18px;
+        }
+        .delete-btn i {
+            font-size: 20px;
+        }
+        .message {
+            color: #27ae60; /* Couleur verte pour le message de succès */
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .error {
+            color: #e74c3c; /* Rouge pour le message d'erreur */
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .button-margin {
+            margin-left: 20px;
+            margin-right: 50px;
+            display: inline-block; /* Pour les aligner en ligne */
+        }
+		.button-container {
+		text-align: center; /* Centrer le contenu */
+		margin-top: 20px; /* Ajouter un espace au-dessus du conteneur */
+		}
+
+		.button-margin {
+		margin: 0 10px; /* Espacement entre les boutons */
+		}
+		
+		.contacts-table th:nth-child(2), .contacts-table td:nth-child(2) {/* Largeur colonne Téléphone */
+		width: 100px; /* Définir une largeur fixe */
+		max-width: 100px; /* Limite la largeur maximale */
+		white-space: nowrap; /* Empêche le retour à la ligne */
+		overflow: hidden; /* Cache le débordement */
+		text-overflow: ellipsis; /* Ajoute des points de suspension pour le texte tronqué */
+		}
+		
+		.contacts-table th:nth-child(5), .contacts-table td:nth-child(5) {/* Largeur colonne Actions */
+		width: 30px; /* Définir une largeur fixe */
+		max-width: 30px; /* Limite la largeur maximale */
+		white-space: nowrap; /* Empêche le retour à la ligne */
+		overflow: hidden; /* Cache le débordement */
+		text-overflow: ellipsis; /* Ajoute des points de suspension pour le texte tronqué */
+		}
+		
+    </style>
+</head>
+<body>
+    <h2>Répertoire Téléphonique</h2>
+    
+    <!-- Partie d'entrée des nouveaux contacts -->
+    <div class="form-container">
+        <input type="text" id="name" placeholder="Nom" />
+        <input type="text" id="phone" placeholder="Téléphone" />
+        <input type="text" id="address" placeholder="Adresse" />
+        <input type="email" id="email" placeholder="E-mail" />
+        <button onclick="addContact()">Ajouter</button>
+        <div id="message"></div>
+    </div>
+
+    <!-- Partie des contacts enregistrés -->
+    <div class="contacts-container">
+        <h3>Contacts enregistrés</h3>
+        <table class="contacts-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Adresse</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="contactsList">
+                <!-- Les contacts seront insérés ici -->
+            </tbody>
+        </table>
+    </div>
+    
+    <br>
+	<div class="button-container">
+    <button class="button-margin" onclick="saveToFile()">Sauvegarder dans un fichier .txt</button>
+    <input type="file" id="fileInput" accept=".txt" />
+    <button onclick="loadFromFile()">Charger depuis un fichier .txt</button>
+	<div>
+    <script>
+        // Fonction pour ajouter un contact au répertoire
+        function addContact() {
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const messageDiv = document.getElementById("message");
+
+            // Vérification si tous les champs sont remplis
+            if (!name || !phone || !address || !email) {
+                messageDiv.textContent = "Veuillez remplir tous les champs !";
+                messageDiv.className = "error";
+				
+				// Effacer le message après 5 secondes
+			setTimeout(() => {
+            messageDiv.textContent = ""; // Efface le message
+			}, 5000);
+		
+                return;
+            }
+
+            let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+
+            // Vérifier si le contact existe déjà (par nom ou téléphone)
+            const duplicate = contacts.some(contact => contact.name === name || contact.phone === phone);
+            if (duplicate) {
+                messageDiv.textContent = "Ce contact existe déjà !";
+                messageDiv.className = "error";
+				
+				// Effacer le message après 5 secondes
+			setTimeout(() => {
+            messageDiv.textContent = ""; // Efface le message
+			}, 5000);
+			
+                return;
+            }
+
+            // Ajouter le nouveau contact
+            contacts.push({ name, phone, address, email });
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            
+            // Effacer les champs après ajout
+            document.getElementById("name").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("address").value = "";
+            document.getElementById("email").value = "";
+
+            // Message de succès
+            messageDiv.textContent = "Contact ajouté avec succès !";
+            messageDiv.className = "message";
+            setTimeout(() => {
+                messageDiv.textContent = ""; // Efface le message après 5 secondes
+            }, 5000);
+
+            displayContacts();
+        }
+
+        // Fonction pour afficher les contacts dans le tableau
+        function displayContacts() {
+            let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+            contacts.sort((a, b) => a.name.localeCompare(b.name)); // Tri automatique par nom
+            const contactsList = document.getElementById('contactsList');
+            contactsList.innerHTML = ''; // Effacer les contacts actuels pour les recharger
+            contacts.forEach((contact, index) => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${contact.name}</td>
+                    <td>${contact.phone}</td>
+                    <td>${contact.address}</td>
+                    <td>${contact.email}</td>
+                    <td>
+                        <button class="delete-btn" onclick="confirmDelete(${index}, '${contact.name}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
+                contactsList.appendChild(row);
+            });
+        }
+
+        // Fonction pour confirmer et supprimer un contact
+        function confirmDelete(index, name) {
+            if (confirm(`Êtes-vous sûr de vouloir supprimer le contact "${name}" ?`)) {
+                deleteContact(index);
+            }
+        }
+
+        // Fonction pour supprimer un contact
+        function deleteContact(index) {
+            let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+            contacts.splice(index, 1);  // Supprimer le contact à l'index spécifié
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            displayContacts();
+        }
+
+        // Fonction pour sauvegarder les contacts dans un fichier .txt avec la date
+        function saveToFile() {
+            const contacts = localStorage.getItem('contacts');
+            if (!contacts || contacts === '[]') {
+                alert("Aucun contact à sauvegarder !");
+                return;  // Sortir de la fonction si le répertoire est vide
+            }
+
+            // Récupérer la date du jour
+            const date = new Date();
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const fileName = `contacts_${year}-${month}-${day}.txt`;
+
+            const blob = new Blob([contacts], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Fonction pour charger les contacts depuis un fichier .txt
+        function loadFromFile() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert("Veuillez sélectionner un fichier !");
+                return;
+            }
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const contacts = event.target.result;
+                localStorage.setItem('contacts', contacts);
+                displayContacts();
+                alert("Contacts chargés avec succès !");
+            };
+
+            reader.readAsText(file);
+        }
+
+        // Afficher les contacts au chargement de la page
+        window.onload = displayContacts;
+    </script>
+</body>
+</html>
+
+
+
